@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROYAL PLAY | Luxury Gaming</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
+header{padding:24px 7%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333}
+.logo{font-size:25px;font-weight:900;color:#e8c66a;letter-spacing:2px}
+header a{color:#ddd;text-decoration:none}
+.hero{text-align:center;padding:65px 20px;background:radial-gradient(ellipse at top,#33260c,#090909 70%)}
+.hero small{color:#e8c66a;letter-spacing:4px}
+h1{font-size:clamp(36px,7vw,65px);margin:15px 0}
+h1 span{color:#e8c66a}
+.hero p{color:#aaa}
+.search{margin-top:25px;width:min(450px,100%);padding:15px;border:1px solid #8e7434;background:#151515;color:white;border-radius:8px}
+.categories{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;padding:10px 15px 25px}
+.categories button{background:#171717;border:1px solid #444;color:#ddd;padding:10px 17px;border-radius:20px;cursor:pointer}
+.categories button.active,.categories button:hover{background:#d6b45b;color:#111;border-color:#d6b45b}
+main{padding:15px 6% 60px}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.section-title h2{color:#e8c66a}
+#count{color:#999;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px}
+.card{background:#141414;border:1px solid #292929;border-radius:13px;overflow:hidden;transition:.2s}
+.card:hover{transform:translateY(-5px);border-color:#d6b45b}
+.art{height:125px;display:grid;place-items:center;font-size:53px;background:linear-gradient(135deg,#272012,#111)}
+.info{padding:15px}
+.info h3{margin:0 0 8px;font-size:17px}
+.info p{color:#999;font-size:12px;margin:0 0 15px}
+.play{width:100%;padding:11px;background:#d6b45b;color:#111;border:0;border-radius:6px;font-weight:bold;cursor:pointer}
+.play:hover{background:#f5d981}
+footer{text-align:center;border-top:1px solid #292929;padding:25px;color:#888;font-size:13px}
+#notice{color:#e8c66a;text-align:center;min-height:24px}
+@media(max-width:500px){header{padding:18px 5%}.logo{font-size:20px}main{padding:10px 4%}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.art{height:100px;font-size:40px}.info{padding:10px}.info h3{font-size:14px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">♛ ROYAL PLAY</div>
+  <a href="#games">EXPLORE GAMES</a>
+</header>
+
+<section class="hero">
+  <small>THE PREMIUM GAMING EXPERIENCE</small>
+  <h1>PLAY BEYOND <span>LIMITS.</span></h1>
+  <p>Discover your next favourite game.</p>
+  <input id="search" class="search" placeholder="🔍 Search your game..." aria-label="Search games">
+</section>
+
+<div class="categories" id="categories"></div>
+
+<main id="games">
+  <div class="section-title">
+    <h2>✦ GAME COLLECTION</h2>
+    <span id="count">30 GAMES</span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <p id="notice" role="status"></p>
+</main>
+
+<footer>ROYAL PLAY © 2026 | YOUR NEXT ADVENTURE STARTS HERE</footer>
+
+<script>
+const games = [
+ ["Neon Racer","Racing","🏎️"],["Street Drift","Racing","🏁"],
+ ["Turbo Drive","Racing","🚘"],["Sky Racer","Racing","🚀"],
+ ["Chess Master","Puzzle","♟️"],["Brain Challenge","Puzzle","🧠"],
+ ["Block Puzzle","Puzzle","🧩"],["2048 Classic","Puzzle","🔢"],
+ ["Space Shooter","Action","🚀"],["Ninja Strike","Action","🥷"],
+ ["Zombie Survival","Action","🧟"],["Cyber Battle","Action","🤖"],
+ ["Football Stars","Sports","⚽"],["Basketball Pro","Sports","🏀"],
+ ["Tennis Ace","Sports","🎾"],["Cricket League","Sports","🏏"],
+ ["Fruit Slice","Arcade","🍉"],["Bubble Pop","Arcade","🫧"],
+ ["Flappy Bird","Arcade","🐦"],["Pixel Jump","Arcade","👾"],
+ ["Gold Miner","Adventure","⛏️"],["Jungle Quest","Adventure","🌴"],
+ ["Treasure Hunt","Adventure","💎"],["Dungeon Escape","Adventure","🏰"],
+ ["Card Royale","Puzzle","🃏"],["Memory Match","Puzzle","🧠"],
+ ["Speed Bike","Racing","🏍️"],["Ocean Explorer","Adventure","🌊"],
+ ["Laser Defender","Action","⚡"],["Lucky Blocks","Arcade","🎲"]
+];
+
+const categories = ["All","Racing","Action","Puzzle","Sports","Arcade","Adventure"];
+let selected = "All";
+const grid = document.getElementById("grid");
+const search = document.getElementById("search");
+const notice = document.getElementById("notice");
+
+function renderCategories(){
+ document.getElementById("categories").innerHTML = categories.map(c =>
+ `<button class="${c===selected?'active':''}" data-category="${c}">${c}</button>`
+ ).join("");
+}
+
+function renderGames(){
+ const query = search.value.trim().toLowerCase();
+ const filtered = games.filter(g =>
+ (selected==="All" || g[1]===selected) &&
+ g[0].toLowerCase().includes(query)
+ );
+ document.getElementById("count").textContent = filtered.length+" GAMES";
+ grid.innerHTML = filtered.map(g => `
+ <article class="card">
+  <div class="art">${g[2]}</div>
+  <div class="info">
+   <h3>${g[0]}</h3>
+   <p>${g[1]} · GAME COLLECTION</p>
+   <button class="play" data-game="${g[0]}">PLAY NOW →</button>
+  </div>
+ </article>`).join("");
+ notice.textContent = filtered.length ? "" : "No games found. Try another search.";
+}
+
+document.getElementById("categories").addEventListener("click",e=>{
+ const button=e.target.closest("button[data-category]");
+ if(!button)return;
+ selected=button.dataset.category;
+ renderCategories();
+ renderGames();
+});
+search.addEventListener("input",renderGames);
+
+grid.addEventListener("click",e=>{
+ const button=e.target.closest("button[data-game]");
+ if(!button)return;
+ notice.textContent=button.dataset.game+
+ " selected! Is game ka playable version abhi add karna baaki hai.";
+});
+
+renderCategories();
+renderGames();
+</script>
+</body>
+</html>
